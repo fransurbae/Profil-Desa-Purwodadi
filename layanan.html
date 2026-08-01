@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Layanan - Desa Purwodadi</title>
+  <style>
+    :root{
+      --primary:#1e5fa8;
+      --primary-2:#2f80ed;
+      --primary-3:#0f3d6e;
+      --bg:#f4f8fc;
+      --card:#ffffff;
+      --text:#17324d;
+      --muted:#5c728a;
+      --line:rgba(30,95,168,.12);
+      --shadow:0 18px 45px rgba(15,61,110,.12);
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47,128,237,.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(30,95,168,.10), transparent 28%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.7;
+      min-height:100vh;
+    }
+
+    header{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:100;
+      backdrop-filter:blur(18px);
+      background:linear-gradient(135deg, rgba(15,61,110,.96), rgba(30,95,168,.92));
+      box-shadow:0 10px 30px rgba(0,0,0,.16);
+    }
+
+    .nav-wrap{
+      max-width:1180px;
+      margin:auto;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .brand{
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+
+    .brand h1{
+      font-size:1.15rem;
+      letter-spacing:.02em;
+    }
+
+    .brand p{
+      font-size:.8rem;
+      opacity:.85;
+    }
+
+    nav ul{
+      list-style:none;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    nav a{
+      color:#fff;
+      text-decoration:none;
+      padding:9px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.24);
+      font-size:.85rem;
+      transition:.25s ease;
+      display:block;
+    }
+
+    nav a:hover,
+    nav a.active{
+      background:#fff;
+      color:var(--primary);
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(0,0,0,.16);
+    }
+
+    .menu-toggle{
+      display:none;
+      color:#fff;
+      font-size:1.5rem;
+      cursor:pointer;
+      user-select:none;
+    }
+
+    main{padding-top:84px}
+
+    .page-header{
+      max-width:1180px;
+      margin:auto;
+      padding:40px 18px 20px;
+      text-align:center;
+      opacity:0;
+      animation:fadeUp .8s ease forwards;
+    }
+
+    .page-header h1{
+      font-size:clamp(2rem,4vw,2.8rem);
+      color:var(--primary-3);
+      margin-bottom:10px;
+    }
+
+    .page-header p{
+      color:var(--muted);
+      font-size:1.05rem;
+      max-width:600px;
+      margin:0 auto;
+    }
+
+    /* Menu Navigasi Layanan */
+    .nav-layanan{
+      max-width:1180px;
+      margin:auto;
+      padding:0 18px 30px;
+      opacity:0;
+      animation:fadeUp .8s ease .1s forwards;
+    }
+
+    .nav-layanan-wrap{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .nav-layanan h3{
+      color:var(--primary);
+      font-size:1rem;
+      margin-bottom:14px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:700;
+    }
+
+    .nav-layanan-buttons{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:12px;
+    }
+
+    .nav-layanan-btn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:14px 16px;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      color:#fff;
+      text-decoration:none;
+      border-radius:14px;
+      font-size:.92rem;
+      font-weight:600;
+      transition:.25s ease;
+      box-shadow:0 8px 18px rgba(30,95,168,.18);
+    }
+
+    .nav-layanan-btn:hover{
+      transform:translateY(-3px);
+      box-shadow:0 12px 28px rgba(30,95,168,.28);
+    }
+
+    .nav-layanan-btn span{
+      font-size:1.3rem;
+    }
+
+    /* Katalog */
+    section{
+      max-width:1180px;
+      margin:auto;
+      padding:18px 18px 34px;
+    }
+
+    .section-card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+      overflow:hidden;
+      position:relative;
+      opacity:0;
+      animation:fadeUp .8s ease .2s forwards;
+    }
+
+    .section-card::before{
+      content:"";
+      position:absolute;
+      inset:auto -40px -40px auto;
+      width:180px;height:180px;
+      background:radial-gradient(circle, rgba(47,128,237,.12), transparent 70%);
+      pointer-events:none;
+    }
+
+    .section-head{
+      margin-bottom:18px;
+    }
+
+    .section-kicker{
+      color:var(--primary);
+      text-transform:uppercase;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      margin-bottom:6px;
+      font-weight:700;
+    }
+
+    .section-title{
+      font-size:1.35rem;
+      margin-bottom:6px;
+      color:var(--primary-3);
+    }
+
+    .section-desc{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .katalog-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-top:20px;
+    }
+
+    .kartu-layanan{
+      background:linear-gradient(180deg,#fff,#f8fbff);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:20px;
+      text-decoration:none;
+      transition:.25s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .kartu-layanan::before{
+      content:"";
+      position:absolute;
+      top:0;left:0;
+      width:100%;height:4px;
+      background:linear-gradient(90deg, var(--primary), var(--primary-2));
+      transform:scaleX(0);
+      transition:transform .3s ease;
+      transform-origin:left;
+    }
+
+    .kartu-layanan:hover::before{
+      transform:scaleX(1);
+    }
+
+    .kartu-layanan:hover{
+      transform:translateY(-5px);
+      box-shadow:0 14px 30px rgba(16,44,80,.1);
+    }
+
+    .kartu-icon{
+      width:60px;
+      height:60px;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:14px;
+      font-size:1.8rem;
+      transition:transform .3s ease;
+    }
+
+    .kartu-layanan:hover .kartu-icon{
+      transform:rotate(8deg) scale(1.08);
+    }
+
+    .kartu-layanan h3{
+      color:var(--primary-3);
+      font-size:1.15rem;
+      margin-bottom:8px;
+    }
+
+    .kartu-layanan p{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.6;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:5px 12px;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      color:#fff;
+      border-radius:999px;
+      font-size:.72rem;
+      font-weight:700;
+      margin-bottom:10px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    /* Alur */
+    .alur-section{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+      margin-top:20px;
+      opacity:0;
+      animation:fadeUp .8s ease .3s forwards;
+    }
+
+    .alur-section h2{
+      color:var(--primary-3);
+      text-align:center;
+      margin-bottom:24px;
+      font-size:1.5rem;
+    }
+
+    .alur-steps{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:16px;
+    }
+
+    .step{
+      text-align:center;
+      padding:18px;
+      border-radius:14px;
+      background:linear-gradient(180deg,#f8fbff,#fff);
+      border:1px solid var(--line);
+      transition:.25s ease;
+    }
+
+    .step:hover{
+      transform:translateY(-4px);
+      box-shadow:0 10px 20px rgba(16,44,80,.08);
+    }
+
+    .step-number{
+      width:50px;
+      height:50px;
+      background:linear-gradient(135deg, var(--primary), var(--primary-2));
+      color:#fff;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 12px;
+      font-size:1.3rem;
+      font-weight:bold;
+      transition:transform .3s ease;
+    }
+
+    .step:hover .step-number{
+      transform:scale(1.1);
+    }
+
+    .step h4{
+      color:var(--primary-3);
+      margin-bottom:8px;
+      font-size:1rem;
+    }
+
+    .step p{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    /* FAQ */
+    .faq-section{
+      background:linear-gradient(135deg, var(--primary-3), #123f73);
+      border-radius:var(--radius);
+      padding:30px 24px;
+      text-align:center;
+      color:#fff;
+      margin-top:20px;
+      opacity:0;
+      animation:fadeUp .8s ease .4s forwards;
+    }
+
+    .faq-section h2{
+      font-size:1.5rem;
+      margin-bottom:12px;
+    }
+
+    .faq-section p{
+      font-size:1rem;
+      margin-bottom:20px;
+      opacity:.9;
+    }
+
+    .btn-faq{
+      display:inline-block;
+      padding:12px 26px;
+      background:#fff;
+      color:var(--primary);
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+      transition:.25s ease;
+    }
+
+    .btn-faq:hover{
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(0,0,0,.2);
+    }
+
+    /* Footer */
+    footer{
+      margin-top:28px;
+      background:linear-gradient(135deg, var(--primary-3), #123f73);
+      color:#fff;
+    }
+
+    .footer-inner{
+      max-width:1180px;
+      margin:auto;
+      padding:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+      font-size:.86rem;
+    }
+
+    @keyframes fadeUp{
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    @media (max-width: 920px){
+      .katalog-grid,.nav-layanan-buttons,.alur-steps{
+        grid-template-columns:1fr;
+      }
+      nav ul{
+        display:none;
+        position:absolute;
+        top:64px;
+        right:18px;
+        background:rgba(12,34,62,.98);
+        padding:12px;
+        border-radius:16px;
+        width:min(280px, calc(100vw - 36px));
+        box-shadow:var(--shadow);
+        flex-direction:column;
+        align-items:stretch;
+      }
+      nav ul.open{display:flex}
+      .menu-toggle{display:block}
+      nav a{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <div class="brand">
+        <h1>Desa Purwodadi</h1>
+        <p>Website Resmi Pemerintah Desa</p>
+      </div>
+      <div class="menu-toggle" id="menuToggle">&#9776;</div>
+      <nav>
+        <ul id="navList">
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="Layanan.html">Kembali ke Halaman Sebelumnya</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Layanan Surat Menyurat</h1>
+      <p>Ajukan berbagai jenis surat keterangan secara online tanpa antre. Sistem kami dirancang untuk mempermudah warga Desa Purwodadi.</p>
+    </div>
+    
+    <!-- Katalog Layanan -->
+    <section>
+      <div class="section-card">
+        <div class="section-head">
+          <div class="section-kicker">Katalog Administrasi</div>
+          <h3 class="section-title">Daftar Pelayanan Surat</h3>
+          <p class="section-desc">Pilih jenis surat yang Anda butuhkan dan ajukan permohonan dengan cepat.</p>
+        </div>
+
+        <div class="katalog-grid">
+          <!-- Kartu 1: SKTM -->
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_eVsbpaC5ITHvSBpajwrKW92cDydTlaSwxPYaeOwKQEOjIg/viewform?usp=dialog" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Tidak Mampu</h3>
+            <p>Surat keterangan untuk keperluan beasiswa, bantuan sosial, dan keperluan administrasi lainnya yang membutuhkan status ekonomi.</p>
+          </a>
+
+          <!-- Kartu 2: Belum Menikah -->
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSe_eVsbpaC5ITHvSBpajwrKW92cDydTlaSwxPYaeOwKQEOjIg/viewform?usp=dialog" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Belum Menikah</h3>
+            <p>Surat keterangan status perkawinan untuk keperluan administrasi pernikahan, pekerjaan, atau dokumen resmi lainnya.</p>
+          </a>
+
+          <!-- Kartu 3: Kematian -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX3" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Kematian</h3>
+            <p>Surat keterangan resmi untuk melaporkan kematian warga dan keperluan administrasi kependudukan.</p>
+          </a>
+
+          <!-- Kartu 4: Penghasilan -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX4" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Penghasilan</h3>
+            <p>Surat keterangan penghasilan untuk keperluan pinjaman, kredit, atau verifikasi kemampuan finansial.</p>
+          </a>
+
+          <!-- Kartu 5: Domisili -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX5" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Domisili</h3>
+            <p>Surat keterangan tempat tinggal untuk keperluan administrasi kependudukan dan resmi lainnya.</p>
+          </a>
+
+          <!-- Kartu 6: Kelahiran -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX6" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Kelahiran</h3>
+            <p>Surat keterangan untuk melaporkan kelahiran dan keperluan pembuatan akta kelahiran.</p>
+          </a>
+
+          <!-- Kartu 7: Usaha -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX7" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Usaha</h3>
+            <p>Surat keterangan untuk keperluan perizinan usaha, pinjaman modal, atau bantuan UMKM.</p>
+          </a>
+
+          <!-- Kartu 8: SKCK -->
+          <a href="https://forms.gle/XXXXXXXXXXXXX8" class="kartu-layanan" target="_blank">
+            <div class="kartu-icon">📄</div>
+            <h3>Surat Keterangan Catatan Kepolisian</h3>
+            <p>Surat keterangan catatan kepolisian untuk keperluan pekerjaan, visa, atau administrasi lainnya.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Alur Proses -->
+      <div class="alur-section">
+        <h2>📝 Alur Pengajuan Surat</h2>
+        <div class="alur-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h4>Pilih Jenis Surat</h4>
+            <p>Pilih jenis surat yang Anda butuhkan dari katalog di atas</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h4>Isi Formulir</h4>
+            <p>Klik tombol pengajuan dan lengkapi data pada Google Form</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h4>Upload Syarat</h4>
+            <p>Unggah dokumen persyaratan yang diminta dalam formulir</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h4>Ambil Surat</h4>
+            <p>Surat akan diproses dan dapat diambil di kantor desa sesuai jadwal</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq-section">
+        <h2>Pertanyaan Umum</h2>
+        <p>Temukan jawaban untuk pertanyaan yang sering diajukan seputar pelayanan di Desa Purwodadi.</p>
+        <a href="https://wa.me/6287814133094?text=Saya%20ingin%20Bertanya%20Seputar%20Pengajuan%20Surat" class="btn-faq">Lihat FAQ Lengkap</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <p>&copy; 2026 Frans Siskus Lo Han Long. Semua Hak dilindungi.</p>
+      <p>Website Resmi Layanan dan Informasi Desa.</p>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navList = document.getElementById('navList');
+    menuToggle.addEventListener('click', () => navList.classList.toggle('open'));
+    document.querySelectorAll('#navList a').forEach(a => a.addEventListener('click', () => navList.classList.remove('open')));
+  </script>
+</body>
+</html>
